@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#define ITERATION_COUNT 20
+#define ITERATION_COUNT 1
 
 static char* letters = "acdegilmnoprstuw";
 static int lettersLength = 16;
@@ -28,8 +28,32 @@ long hash(char* str, int length) {
   return h;
 }
 
+char* _unhash_recursive(long target, int length, char* sofar) {
+  if(strlen(sofar) == length) {
+    if(hash(sofar, length) == target) {
+      return sofar;
+    }
+  } else {
+    for(int i = 0;i < strlen(letters);i++) {
+      char* newsofar = calloc(sizeof(char), strlen(sofar) + 2);
+      strcpy(newsofar, sofar);
+      newsofar[strlen(sofar)] = letters[i];
+      newsofar[strlen(sofar) + 1] = '\0';
+      char* tmp;
+      if((tmp = _unhash_recursive(target, length, newsofar)) != NULL) {
+        if(tmp != newsofar)
+          free(newsofar);
+        return tmp;
+      }
+      free(newsofar);
+    }
+  }
+  return NULL;
+}
+
 char* unhash(long target, int length) {
-  return "";
+  char* str = calloc(sizeof(char), length + 1);
+  return _unhash_recursive(target, length, "");
 }
 
 int main() {
@@ -40,14 +64,14 @@ int main() {
   if(hashed != 680131659347L)
     printf("%ld should be 680131659347\n", hashed);
   else
-    printf("Succesful hash.\n");
+    printf("Successful hash.\n");
 
   // Does unhash work?  Should be "leepadg".
   char* unhashed = unhash(680131659347L, 7);
   if(strcmp(unhashed, "leepadg"))
     printf("%s should be leepadg\n", unhashed);
   else
-    printf("Succesful unhash.\n");
+    printf("Successful unhash.\n");
 
   // Start timing
   clock_t cstart = clock();
