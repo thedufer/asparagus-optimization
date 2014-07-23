@@ -15,14 +15,10 @@ void setup() {
     lettersReversed[letters[i]] = i;
 }
 
-int getPosition(char c) {
-  return lettersReversed[c];
-}
-
 long hash(char* str, int length) {
   long h = 7;
   for(int i = 0;i < length;i++) {
-    h = h * 37 + getPosition(str[i]);
+    h = h * 37 + lettersReversed[str[i]];
   }
   return h;
 }
