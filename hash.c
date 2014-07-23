@@ -28,32 +28,21 @@ long hash(char* str, int length) {
   return h;
 }
 
-char* _unhash_recursive(long target, int length, char* sofar) {
-  if(strlen(sofar) == length) {
-    if(hash(sofar, length) == target) {
-      return sofar;
-    }
-  } else {
-    for(int i = 0;i < strlen(letters);i++) {
-      char* newsofar = calloc(sizeof(char), strlen(sofar) + 2);
-      strcpy(newsofar, sofar);
-      newsofar[strlen(sofar)] = letters[i];
-      newsofar[strlen(sofar) + 1] = '\0';
-      char* tmp;
-      if((tmp = _unhash_recursive(target, length, newsofar)) != NULL) {
-        if(tmp != newsofar)
-          free(newsofar);
-        return tmp;
-      }
-      free(newsofar);
-    }
-  }
-  return NULL;
-}
-
 char* unhash(long target, int length) {
   char* str = calloc(sizeof(char), length + 1);
-  return _unhash_recursive(target, length, "");
+  memset(str, '\0', sizeof(char) * (length + 1));
+  for(int i = 0;;i++) {
+    int tmp = i;
+    for(int j = 0;j < length;j++) {
+      str[j] = letters[tmp % lettersLength];
+      tmp /= lettersLength;
+    }
+    if(tmp > 0)
+      // This indicates that we tried all the possibilities.
+      return NULL;
+    if(hash(str, length) == target)
+      return str;
+  }
 }
 
 int main() {
