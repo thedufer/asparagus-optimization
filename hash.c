@@ -15,7 +15,7 @@ void setup() {
     lettersReversed[letters[i]] = i;
 }
 
-long hash(char* str, int length) {
+static long hash(char* str, int length) {
   long h = 7;
   for(int i = 0;i < length;i++) {
     h = h * 37 + lettersReversed[str[i]];
@@ -23,7 +23,7 @@ long hash(char* str, int length) {
   return h;
 }
 
-char* unhash(long target, int length) {
+static char* unhash(long target, int length) {
   char* str = calloc(sizeof(char), length + 1);
   memset(str, letters[0], sizeof(char) * length);
   str[length] = '\0';
