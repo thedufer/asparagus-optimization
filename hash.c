@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#define ITERATION_COUNT 1
+#define ITERATION_COUNT 5
 
 static char* letters = "acdegilmnoprstuw";
 static int lettersLength = 16;
@@ -29,16 +29,16 @@ long hash(char* str, int length) {
 
 char* unhash(long target, int length) {
   char* str = calloc(sizeof(char), length + 1);
-  memset(str, '\0', sizeof(char) * (length + 1));
-  for(int i = 0;;i++) {
-    int tmp = i;
-    for(int j = 0;j < length;j++) {
-      str[j] = letters[tmp % lettersLength];
-      tmp /= lettersLength;
+  memset(str, letters[0], sizeof(char) * length);
+  str[length] = '\0';
+  while(1) {
+    int i = 0;
+    str[i] = letters[lettersReversed[str[i]] + 1];
+    while(str[i] == '\0') {
+      str[i] = letters[0];
+      i++;
+      str[i] = letters[lettersReversed[str[i]] + 1];
     }
-    if(tmp > 0)
-      // This indicates that we tried all the possibilities.
-      return NULL;
     if(hash(str, length) == target)
       return str;
   }
