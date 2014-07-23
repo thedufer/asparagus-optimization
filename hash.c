@@ -7,17 +7,16 @@
 
 static char* letters = "acdegilmnoprstuw";
 static int lettersLength = 16;
+static char* lettersReversed;
 
 void setup() {
+  lettersReversed = calloc(sizeof(int), 0xFF);
+  for(int i = 0;i < lettersLength;i++)
+    lettersReversed[letters[i]] = i;
 }
 
 int getPosition(char c) {
-  for(int i = 0;i < lettersLength;i++) {
-    if(c == letters[i])
-      return i;
-  }
-  printf("Something has gone horribly wrong.\n");
-  return -1;
+  return lettersReversed[c];
 }
 
 long hash(char* str, int length) {
